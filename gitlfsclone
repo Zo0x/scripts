@@ -1,0 +1,20 @@
+#!/bin/bash
+# Initialize LFS then clone the relevant repo
+
+# Skip smudge - We'll download binary files later in a faster batch
+git lfs install --skip-smudge
+
+# Do git clone
+local tmp=$(mktemp)
+local repo_name
+git clone "$@" | tee $tmp
+repo_name=$(awk -F\' '/Cloning into/ {print $2}' $tmp)
+rm $tmp
+printf "Changing to directory: %s\n" "$repo_name"
+cd "$repo_name"
+
+# Fetch all the binary files in the new clone
+git lfs pull
+
+# Reinstate smudge
+git lfs install --force

@@ -1,0 +1,5 @@
+#!/bin/bash
+# Adds all files to the commit and pushes it with the specified message
+git add -A
+git commit -m "$*"
+git push
